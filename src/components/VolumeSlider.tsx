@@ -1,4 +1,3 @@
-import React from 'react';
 import { View } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { Ionicons } from '@expo/vector-icons';

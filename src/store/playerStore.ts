@@ -4,6 +4,8 @@ import { Track, RepeatMode } from '../types/track';
 import { PlayerStore } from '../types/store';
 import { getPublicUrl } from '../lib/storage';
 import { supabase } from '../lib/supabase';
+import { addListenedMs, getListenedMs } from '../lib/listenedTime';
+export { getListenedMs };
 
 export const usePlayerStore = create<PlayerStore>((set, get) => ({
   currentTrack: null,
@@ -146,21 +148,8 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   },
 }));
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const LISTENED_KEY = 'vinyl_listened_ms';
 let lastPosition = 0;
 let lastUpdateTs = 0;
-
-async function addListenedMs(ms: number) {
-  if (ms <= 0) return;
-  const prev = parseInt((await AsyncStorage.getItem(LISTENED_KEY)) ?? '0', 10);
-  await AsyncStorage.setItem(LISTENED_KEY, String(prev + ms));
-}
-
-export async function getListenedMs(): Promise<number> {
-  return parseInt((await AsyncStorage.getItem(LISTENED_KEY)) ?? '0', 10);
-}
 
 function onPlaybackStatusUpdate(status: AVPlaybackStatus) {
   if (!status.isLoaded) return;

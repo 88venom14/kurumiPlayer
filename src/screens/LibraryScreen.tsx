@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { View, Text, ActivityIndicator, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -9,12 +9,7 @@ import { usePlayer } from '../hooks/usePlayer';
 import { Track } from '../types/track';
 import { COLORS } from '../theme/colors';
 import { styles } from '../styles/LibraryScreen.styles';
-
-function pluralTracks(n: number): string {
-  if (n % 10 === 1 && n % 100 !== 11) return 'трек';
-  if (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) return 'трека';
-  return 'треков';
-}
+import { pluralTracks } from '../utils/format';
 
 export function LibraryScreen() {
   const { tracks, loading, uploading, fetchTracks, uploadTrack, deleteTrack } = useTracks();
@@ -82,4 +77,3 @@ export function LibraryScreen() {
     </SafeAreaView>
   );
 }
-

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { FlatList, View, Text, RefreshControl } from 'react-native';
 import { Track } from '../types/track';
 import { TrackItem } from './TrackItem';

@@ -67,15 +67,6 @@ export function usePlaylists() {
     await fetchPlaylists();
   }, [fetchPlaylists]);
 
-  const renamePlaylist = useCallback(async (playlistId: string, name: string) => {
-    const { error: updError } = await supabase
-      .from('playlists')
-      .update({ name: name.trim() })
-      .eq('id', playlistId);
-    if (updError) throw updError;
-    await fetchPlaylists();
-  }, [fetchPlaylists]);
-
   const addTrackToPlaylist = useCallback(
     async (playlistId: string, trackId: string) => {
       const { data: posData } = await supabase
@@ -179,7 +170,6 @@ export function usePlaylists() {
     fetchPlaylists,
     createPlaylist,
     deletePlaylist,
-    renamePlaylist,
     addTrackToPlaylist,
     removeTrackFromPlaylist,
     getPlaylistTracks,

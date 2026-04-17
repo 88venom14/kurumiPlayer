@@ -1,4 +1,3 @@
-import React from 'react';
 import { View, Text } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { COLORS } from '../theme/colors';

@@ -10,11 +10,15 @@ export const styles = StyleSheet.create({
     backgroundColor: '#111111',
     alignItems: 'center',
     justifyContent: 'center',
+    borderColor: COLORS.discBorder,
+    borderWidth: 1,
   },
   center: {
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: COLORS.accent,
+    borderColor: COLORS.discBorder,
+    borderWidth: 2,
   },
   coverImage: {
     position: 'absolute',

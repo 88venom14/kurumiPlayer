@@ -1,63 +1,11 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Image, Alert } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  withRepeat,
-  withTiming,
-  withSequence,
-  useSharedValue,
-} from 'react-native-reanimated';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
 import { getPublicUrl } from '../lib/storage';
-import { styles, eqStyles } from '../styles/TrackItem.styles';
+import { styles } from '../styles/TrackItem.styles';
 import { TrackItemProps } from '../types/props';
-
-function EqualizerBars() {
-  const bar1 = useSharedValue(0.3);
-  const bar2 = useSharedValue(0.6);
-  const bar3 = useSharedValue(0.4);
-
-  React.useEffect(() => {
-    bar1.value = withRepeat(
-      withSequence(
-        withTiming(1, { duration: 400 }),
-        withTiming(0.2, { duration: 300 })
-      ),
-      -1,
-      true
-    );
-    bar2.value = withRepeat(
-      withSequence(
-        withTiming(0.8, { duration: 300 }),
-        withTiming(0.3, { duration: 400 })
-      ),
-      -1,
-      true
-    );
-    bar3.value = withRepeat(
-      withSequence(
-        withTiming(1, { duration: 500 }),
-        withTiming(0.1, { duration: 350 })
-      ),
-      -1,
-      true
-    );
-  }, []);
-
-  const style1 = useAnimatedStyle(() => ({ height: bar1.value * 16 }));
-  const style2 = useAnimatedStyle(() => ({ height: bar2.value * 16 }));
-  const style3 = useAnimatedStyle(() => ({ height: bar3.value * 16 }));
-
-  return (
-    <View style={eqStyles.container}>
-      <Animated.View style={[eqStyles.bar, style1]} />
-      <Animated.View style={[eqStyles.bar, style2]} />
-      <Animated.View style={[eqStyles.bar, style3]} />
-    </View>
-  );
-}
-
+import { EqualizerBars } from './EqualizerBars';
+import { formatDuration } from '../utils/format';
 
 export function TrackItem({
   track,
@@ -72,14 +20,6 @@ export function TrackItem({
   isSaved,
 }: TrackItemProps) {
   const coverUrl = track.cover_path ? getPublicUrl(track.cover_path) : null;
-
-  const formatDuration = (ms: number | null): string => {
-    if (!ms) return '--:--';
-    const totalSeconds = Math.floor(ms / 1000);
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-  };
 
   return (
     <TouchableOpacity
@@ -110,10 +50,7 @@ export function TrackItem({
       </View>
 
       <View style={styles.info}>
-        <Text
-          style={[styles.title, isActive && styles.activeText]}
-          numberOfLines={1}
-        >
+        <Text style={[styles.title, isActive && styles.activeText]} numberOfLines={1}>
           {track.title}
         </Text>
         <Text style={styles.artist} numberOfLines={1}>
@@ -144,4 +81,3 @@ export function TrackItem({
     </TouchableOpacity>
   );
 }
-
