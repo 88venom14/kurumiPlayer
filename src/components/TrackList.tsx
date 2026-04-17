@@ -1,0 +1,95 @@
+import React, { useCallback } from 'react';
+import { FlatList, StyleSheet, View, Text, RefreshControl } from 'react-native';
+import { Track } from '../types/track';
+import { TrackItem } from './TrackItem';
+import { COLORS } from '../theme/colors';
+
+interface TrackListProps {
+  tracks: Track[];
+  currentTrackId: string | null;
+  isPlaying: boolean;
+  onTrackPress: (track: Track) => void;
+  onTrackLongPress?: (track: Track) => void;
+  onTrackDelete?: (track: Track) => void;
+  refreshing: boolean;
+  onRefresh: () => void;
+}
+
+export function TrackList({
+  tracks,
+  currentTrackId,
+  isPlaying,
+  onTrackPress,
+  onTrackLongPress,
+  onTrackDelete,
+  refreshing,
+  onRefresh,
+}: TrackListProps) {
+  const renderItem = useCallback(
+    ({ item, index }: { item: Track; index: number }) => (
+      <TrackItem
+        track={item}
+        index={index}
+        isActive={item.id === currentTrackId}
+        isPlaying={item.id === currentTrackId && isPlaying}
+        onPress={() => onTrackPress(item)}
+        onLongPress={onTrackLongPress ? () => onTrackLongPress(item) : undefined}
+        onDelete={onTrackDelete ? () => onTrackDelete(item) : undefined}
+      />
+    ),
+    [currentTrackId, isPlaying, onTrackPress, onTrackLongPress, onTrackDelete]
+  );
+
+  const keyExtractor = useCallback((item: Track) => item.id, []);
+
+  if (tracks.length === 0) {
+    return (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>No tracks yet</Text>
+        <Text style={styles.emptySubtext}>
+          Upload your first track to get started
+        </Text>
+      </View>
+    );
+  }
+
+  return (
+    <FlatList
+      data={tracks}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+      contentContainerStyle={styles.list}
+      showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          tintColor={COLORS.accent}
+        />
+      }
+    />
+  );
+}
+
+const styles = StyleSheet.create({
+  list: {
+    paddingVertical: 8,
+  },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 40,
+    gap: 8,
+  },
+  emptyText: {
+    color: COLORS.textSecondary,
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  emptySubtext: {
+    color: COLORS.textMuted,
+    fontSize: 14,
+    textAlign: 'center',
+  },
+});
