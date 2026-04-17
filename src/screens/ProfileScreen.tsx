@@ -19,10 +19,16 @@ interface Profile {
 
 function formatListened(ms: number): string {
   const totalMinutes = Math.floor(ms / 60000);
-  if (totalMinutes < 60) return `${totalMinutes} min`;
+  if (totalMinutes < 60) return `${totalMinutes} мин`;
   const hours = Math.floor(totalMinutes / 60);
   const mins = totalMinutes % 60;
-  return `${hours}h ${mins}m`;
+  return `${hours} ч ${mins} м`;
+}
+
+function pluralTracks(n: number): string {
+  if (n % 10 === 1 && n % 100 !== 11) return 'трек';
+  if (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) return 'трека';
+  return 'треков';
 }
 
 export function ProfileScreen() {
@@ -74,10 +80,10 @@ export function ProfileScreen() {
     });
     setSaving(false);
     if (error) {
-      Alert.alert('Error', error.message);
+      Alert.alert('Ошибка', error.message);
     } else {
       setSavedName(name.trim());
-      Alert.alert('Saved', 'Profile updated');
+      Alert.alert('Сохранено', 'Профиль обновлён');
     }
   };
 
@@ -104,7 +110,7 @@ export function ProfileScreen() {
         updated_at: new Date().toISOString(),
       });
     } catch (e: any) {
-      Alert.alert('Error', e.message);
+      Alert.alert('Ошибка', e.message);
     } finally {
       setUploadingAvatar(false);
     }
@@ -118,7 +124,6 @@ export function ProfileScreen() {
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
 
-        {/* Avatar */}
         <View style={styles.avatarSection}>
           <TouchableOpacity style={styles.avatarWrapper} onPress={pickAvatar} disabled={uploadingAvatar}>
             {avatarUrl ? (
@@ -134,19 +139,18 @@ export function ProfileScreen() {
                 : <Ionicons name="camera" size={14} color={COLORS.background} />}
             </View>
           </TouchableOpacity>
-          <Text style={styles.displayName}>{savedName || 'Tap to set name'}</Text>
+          <Text style={styles.displayName}>{savedName || 'Нажмите, чтобы указать имя'}</Text>
           <Text style={styles.emailCaption}>{email}</Text>
         </View>
 
-        {/* Name */}
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>Display Name</Text>
+          <Text style={styles.sectionLabel}>Отображаемое имя</Text>
           <View style={styles.inputRow}>
             <TextInput
               style={styles.input}
               value={name}
               onChangeText={setName}
-              placeholder="Enter your name"
+              placeholder="Введите имя"
               placeholderTextColor={COLORS.textMuted}
             />
             <TouchableOpacity
@@ -161,7 +165,6 @@ export function ProfileScreen() {
           </View>
         </View>
 
-        {/* Email */}
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>Email</Text>
           <View style={styles.readOnly}>
@@ -170,17 +173,16 @@ export function ProfileScreen() {
           </View>
         </View>
 
-        {/* Stats */}
         <View style={styles.statsRow}>
           <View style={styles.statCard}>
             <Ionicons name="musical-notes" size={22} color={COLORS.accent} />
             <Text style={styles.statValue}>{tracks.length}</Text>
-            <Text style={styles.statLabel}>{tracks.length === 1 ? 'Track' : 'Tracks'}</Text>
+            <Text style={styles.statLabel}>{pluralTracks(tracks.length)}</Text>
           </View>
           <View style={styles.statCard}>
             <Ionicons name="headset" size={22} color={COLORS.accent} />
             <Text style={styles.statValue}>{formatListened(listenedMs)}</Text>
-            <Text style={styles.statLabel}>Listened</Text>
+            <Text style={styles.statLabel}>Прослушано</Text>
           </View>
         </View>
 
@@ -188,23 +190,22 @@ export function ProfileScreen() {
           <View style={styles.infoCard}>
             <Ionicons name="library-outline" size={16} color={COLORS.textMuted} />
             <Text style={styles.infoText}>
-              Library: {formatListened(totalDurationMs)} total
+              Библиотека: {formatListened(totalDurationMs)} всего
             </Text>
           </View>
         )}
 
-        {/* Sign out */}
         <TouchableOpacity
           style={styles.signOutBtn}
           onPress={() =>
-            Alert.alert('Sign Out', 'Are you sure?', [
-              { text: 'Cancel', style: 'cancel' },
-              { text: 'Sign Out', style: 'destructive', onPress: () => supabase.auth.signOut() },
+            Alert.alert('Выйти', 'Вы уверены?', [
+              { text: 'Отмена', style: 'cancel' },
+              { text: 'Выйти', style: 'destructive', onPress: () => supabase.auth.signOut() },
             ])
           }
         >
           <Ionicons name="log-out-outline" size={20} color={COLORS.error} />
-          <Text style={styles.signOutText}>Sign Out</Text>
+          <Text style={styles.signOutText}>Выйти</Text>
         </TouchableOpacity>
 
       </ScrollView>

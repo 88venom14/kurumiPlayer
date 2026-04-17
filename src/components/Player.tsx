@@ -29,7 +29,6 @@ export function Player() {
 
   return (
     <View style={styles.container}>
-      {/* Vinyl Disc */}
       <View style={styles.vinylContainer}>
         <Vinyl
           isPlaying={isPlaying}
@@ -38,17 +37,15 @@ export function Player() {
         />
       </View>
 
-      {/* Track Info */}
       <View style={styles.trackInfo}>
         <Text style={styles.title} numberOfLines={1}>
-          {currentTrack?.title ?? 'No Track Selected'}
+          {currentTrack?.title ?? 'Трек не выбран'}
         </Text>
         <Text style={styles.artist} numberOfLines={1}>
-          {currentTrack?.artist ?? 'Select a track from Library'}
+          {currentTrack?.artist ?? 'Выберите трек из библиотеки'}
         </Text>
       </View>
 
-      {/* Progress Bar */}
       <ProgressBar
         progress={progress}
         duration={duration}
@@ -56,7 +53,6 @@ export function Player() {
         formatTime={formatTime}
       />
 
-      {/* Playback Controls */}
       <Controls
         isPlaying={isPlaying}
         isShuffled={isShuffled}
@@ -69,7 +65,6 @@ export function Player() {
         isLoading={isLoading}
       />
 
-      {/* Volume Slider */}
       <VolumeSlider volume={volume} onVolumeChange={setVolume} />
     </View>
   );

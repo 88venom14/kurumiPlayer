@@ -54,7 +54,6 @@ export function Controls({
 
   return (
     <View style={styles.container}>
-      {/* Shuffle */}
       <TouchableOpacity onPress={onShuffle} style={styles.sideButton}>
         <Ionicons
           name="shuffle"
@@ -63,12 +62,10 @@ export function Controls({
         />
       </TouchableOpacity>
 
-      {/* Previous */}
       <TouchableOpacity onPress={onPrevious} style={styles.sideButton}>
         <Ionicons name="play-skip-back" size={28} color={COLORS.text} />
       </TouchableOpacity>
 
-      {/* Play/Pause */}
       <AnimatedTouchable
         onPress={handlePlayPress}
         style={[styles.playButton, playAnimatedStyle]}
@@ -82,12 +79,10 @@ export function Controls({
         />
       </AnimatedTouchable>
 
-      {/* Next */}
       <TouchableOpacity onPress={onNext} style={styles.sideButton}>
         <Ionicons name="play-skip-forward" size={28} color={COLORS.text} />
       </TouchableOpacity>
 
-      {/* Repeat */}
       <TouchableOpacity onPress={onRepeat} style={styles.sideButton}>
         <View>
           <Ionicons

@@ -67,7 +67,7 @@ export function PlaylistsScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Playlists</Text>
+        <Text style={styles.headerTitle}>Плейлисты</Text>
         <View style={styles.headerActions}>
           <TouchableOpacity style={styles.iconBtn} onPress={() => setImportOpen(true)}>
             <Ionicons name="link-outline" size={20} color={COLORS.accent} />
@@ -85,8 +85,8 @@ export function PlaylistsScreen() {
       ) : playlists.length === 0 ? (
         <View style={styles.centered}>
           <Ionicons name="albums-outline" size={56} color={COLORS.surfaceLight} />
-          <Text style={styles.emptyTitle}>No playlists yet</Text>
-          <Text style={styles.emptyHint}>Tap + to create one or import via link</Text>
+          <Text style={styles.emptyTitle}>Нет плейлистов</Text>
+          <Text style={styles.emptyHint}>Нажмите + чтобы создать или импортировать</Text>
         </View>
       ) : (
         <FlatList
@@ -98,12 +98,12 @@ export function PlaylistsScreen() {
               playlist={item}
               onPress={() => setSelectedId(item.id)}
               onDelete={() =>
-                Alert.alert('Delete playlist', `Remove "${item.name}"?`, [
-                  { text: 'Cancel', style: 'cancel' },
+                Alert.alert('Удалить плейлист', `Удалить «${item.name}»?`, [
+                  { text: 'Отмена', style: 'cancel' },
                   {
-                    text: 'Delete',
+                    text: 'Удалить',
                     style: 'destructive',
-                    onPress: () => deletePlaylist(item.id).catch((e) => Alert.alert('Error', e.message)),
+                    onPress: () => deletePlaylist(item.id).catch((e) => Alert.alert('Ошибка', e.message)),
                   },
                 ])
               }
@@ -120,7 +120,7 @@ export function PlaylistsScreen() {
             await createPlaylist(name);
             setCreateOpen(false);
           } catch (e: any) {
-            Alert.alert('Error', e.message);
+            Alert.alert('Ошибка', e.message);
           }
         }}
       />
@@ -132,9 +132,9 @@ export function PlaylistsScreen() {
           try {
             await importPlaylist(code);
             setImportOpen(false);
-            Alert.alert('Imported', 'Playlist added to your library.');
+            Alert.alert('Импортировано', 'Плейлист добавлен в библиотеку.');
           } catch (e: any) {
-            Alert.alert('Import failed', e.message);
+            Alert.alert('Ошибка импорта', e.message);
           }
         }}
       />
@@ -161,7 +161,7 @@ function PlaylistCard({
           {playlist.name}
         </Text>
         <Text style={styles.cardMeta}>
-          {playlist.track_count} {playlist.track_count === 1 ? 'track' : 'tracks'}
+          {playlist.track_count} {playlist.track_count % 10 === 1 && playlist.track_count % 100 !== 11 ? 'трек' : playlist.track_count % 10 >= 2 && playlist.track_count % 10 <= 4 && (playlist.track_count % 100 < 10 || playlist.track_count % 100 >= 20) ? 'трека' : 'треков'}
         </Text>
       </View>
       <TouchableOpacity onPress={onDelete} hitSlop={12} style={styles.cardAction}>
@@ -199,7 +199,7 @@ function PlaylistDetail({
     try {
       setRows(await getPlaylistTracks(playlist.id));
     } catch (e: any) {
-      Alert.alert('Error', e.message);
+      Alert.alert('Ошибка', e.message);
     } finally {
       setLoading(false);
     }
@@ -211,16 +211,16 @@ function PlaylistDetail({
     const link = buildShareLink(playlist.share_code);
     try {
       await Share.share({
-        message: `Check out my playlist "${playlist.name}" on VinylPlayer:\n${link}`,
+        message: `Посмотри мой плейлист «${playlist.name}» в KurumiPlayer:\n${link}`,
       });
-    } catch {}
+    } catch { }
   };
 
   const handleRemove = (trackId: string, title: string) => {
-    Alert.alert('Remove from playlist', title, [
-      { text: 'Cancel', style: 'cancel' },
+    Alert.alert('Убрать из плейлиста', title, [
+      { text: 'Отмена', style: 'cancel' },
       {
-        text: 'Remove',
+        text: 'Убрать',
         style: 'destructive',
         onPress: async () => {
           await removeTrack(playlist.id, trackId);
@@ -234,7 +234,6 @@ function PlaylistDetail({
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={onBack} hitSlop={10}>
           <Ionicons name="chevron-back" size={26} color={COLORS.text} />
@@ -250,11 +249,10 @@ function PlaylistDetail({
         </TouchableOpacity>
       </View>
 
-      {/* Share code pill */}
       <View style={styles.sharePill}>
         <Ionicons name="link-outline" size={13} color={COLORS.textMuted} />
         <Text style={styles.shareCode} selectable>{playlist.share_code}</Text>
-        <Text style={styles.shareLabel}>share code</Text>
+        <Text style={styles.shareLabel}>код доступа</Text>
       </View>
 
       {loading ? (
@@ -264,8 +262,8 @@ function PlaylistDetail({
       ) : rows.length === 0 ? (
         <View style={styles.centered}>
           <Ionicons name="musical-note-outline" size={48} color={COLORS.surfaceLight} />
-          <Text style={styles.emptyTitle}>No tracks yet</Text>
-          <Text style={styles.emptyHint}>Tap + to add tracks from your library</Text>
+          <Text style={styles.emptyTitle}>Нет треков</Text>
+          <Text style={styles.emptyHint}>Нажмите + чтобы добавить треки из библиотеки</Text>
         </View>
       ) : (
         <FlatList
@@ -280,7 +278,7 @@ function PlaylistDetail({
               isPlaying={isPlaying && currentTrack?.id === item.track.id}
               onPress={async () => {
                 await playTrackFromList(item.track, playlistTracks);
-                navigation.navigate('Player');
+                navigation.navigate('Плеер');
               }}
               onRemove={() => handleRemove(item.track_id, item.track.title)}
             />
@@ -290,7 +288,7 @@ function PlaylistDetail({
 
       <TouchableOpacity style={styles.deleteFooter} onPress={onDelete}>
         <Ionicons name="trash-outline" size={15} color={COLORS.error} />
-        <Text style={styles.deleteFooterText}>Delete playlist</Text>
+        <Text style={styles.deleteFooterText}>Удалить плейлист</Text>
       </TouchableOpacity>
 
       <AddTracksModal
@@ -316,11 +314,11 @@ function CreatePlaylistModal({
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <View style={styles.overlay}>
         <View style={styles.sheet}>
-          <Text style={styles.sheetTitle}>New playlist</Text>
+          <Text style={styles.sheetTitle}>Новый плейлист</Text>
           <TextInput
             value={name}
             onChangeText={setName}
-            placeholder="Playlist name"
+            placeholder="Название плейлиста"
             placeholderTextColor={COLORS.textMuted}
             style={styles.input}
             autoFocus
@@ -328,14 +326,14 @@ function CreatePlaylistModal({
           />
           <View style={styles.sheetActions}>
             <TouchableOpacity style={styles.btnGhost} onPress={onClose}>
-              <Text style={styles.btnGhostText}>Cancel</Text>
+              <Text style={styles.btnGhostText}>Отмена</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.btnAccent, !name.trim() && { opacity: 0.4 }]}
               disabled={!name.trim()}
               onPress={() => onCreate(name)}
             >
-              <Text style={styles.btnAccentText}>Create</Text>
+              <Text style={styles.btnAccentText}>Создать</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -353,8 +351,8 @@ function ImportPlaylistModal({
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <View style={styles.overlay}>
         <View style={styles.sheet}>
-          <Text style={styles.sheetTitle}>Import playlist</Text>
-          <Text style={styles.sheetHint}>Paste a share link or 12-character code</Text>
+          <Text style={styles.sheetTitle}>Импорт плейлиста</Text>
+          <Text style={styles.sheetHint}>Вставьте ссылку или 12-значный код</Text>
           <TextInput
             value={value}
             onChangeText={setValue}
@@ -367,14 +365,14 @@ function ImportPlaylistModal({
           />
           <View style={styles.sheetActions}>
             <TouchableOpacity style={styles.btnGhost} onPress={onClose}>
-              <Text style={styles.btnGhostText}>Cancel</Text>
+              <Text style={styles.btnGhostText}>Отмена</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.btnAccent, !value.trim() && { opacity: 0.4 }]}
               disabled={!value.trim()}
               onPress={() => onImport(value)}
             >
-              <Text style={styles.btnAccentText}>Import</Text>
+              <Text style={styles.btnAccentText}>Импортировать</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -405,7 +403,7 @@ function AddTracksModal({
         return next;
       });
     } catch (e: any) {
-      Alert.alert('Error', e.message);
+      Alert.alert('Ошибка', e.message);
     }
   };
 
@@ -417,12 +415,12 @@ function AddTracksModal({
             <Ionicons name="close" size={26} color={COLORS.text} />
           </TouchableOpacity>
           <Text style={[styles.headerTitle, { flex: 1, marginLeft: 8, fontSize: 20 }]}>
-            Add tracks
+            Добавить треки
           </Text>
         </View>
         {libraryTracks.length === 0 ? (
           <View style={styles.centered}>
-            <Text style={styles.emptyTitle}>No tracks in library</Text>
+            <Text style={styles.emptyTitle}>В библиотеке нет треков</Text>
           </View>
         ) : (
           <FlatList
@@ -447,7 +445,7 @@ function AddTracksModal({
                   <View style={{ flex: 1 }}>
                     <Text style={styles.addRowTitle} numberOfLines={1}>{item.title}</Text>
                     <Text style={styles.addRowMeta} numberOfLines={1}>
-                      {item.artist ?? 'Unknown Artist'}
+                      {item.artist ?? 'Неизвестный исполнитель'}
                     </Text>
                   </View>
                 </TouchableOpacity>
@@ -491,7 +489,6 @@ const styles = StyleSheet.create({
   emptyTitle: { color: COLORS.textSecondary, fontSize: 16, fontWeight: '600', marginTop: 8 },
   emptyHint: { color: COLORS.textMuted, fontSize: 13, textAlign: 'center', paddingHorizontal: 40 },
 
-  /* Playlist card */
   card: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -515,7 +512,6 @@ const styles = StyleSheet.create({
   cardMeta: { color: COLORS.textMuted, fontSize: 12, fontFamily: FONTS.mono },
   cardAction: { padding: 6 },
 
-  /* Share pill */
   sharePill: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -537,7 +533,6 @@ const styles = StyleSheet.create({
   },
   shareLabel: { color: COLORS.textMuted, fontSize: 11 },
 
-  /* Delete footer */
   deleteFooter: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -549,7 +544,6 @@ const styles = StyleSheet.create({
   },
   deleteFooterText: { color: COLORS.error, fontSize: 13, fontWeight: '600' },
 
-  /* Modals */
   overlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.65)',
@@ -588,7 +582,6 @@ const styles = StyleSheet.create({
   },
   btnAccentText: { color: COLORS.background, fontSize: 14, fontWeight: '700' },
 
-  /* Add tracks modal rows */
   addRow: {
     flexDirection: 'row',
     alignItems: 'center',

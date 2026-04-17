@@ -22,7 +22,7 @@ export function MainTabs() {
       }}
     >
       <Tab.Screen
-        name="Player"
+        name="Плеер"
         component={PlayerScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
@@ -31,7 +31,7 @@ export function MainTabs() {
         }}
       />
       <Tab.Screen
-        name="Library"
+        name="Библиотека"
         component={LibraryScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
@@ -40,7 +40,7 @@ export function MainTabs() {
         }}
       />
       <Tab.Screen
-        name="Playlists"
+        name="Плейлисты"
         component={PlaylistsScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
@@ -49,7 +49,7 @@ export function MainTabs() {
         }}
       />
       <Tab.Screen
-        name="Profile"
+        name="Профиль"
         component={ProfileScreen}
         options={{
           tabBarIcon: ({ color, size }) => (

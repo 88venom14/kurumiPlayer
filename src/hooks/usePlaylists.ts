@@ -17,7 +17,7 @@ export function usePlaylists() {
       setLoading(true);
       setError(null);
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
+      if (!user) throw new Error('Не авторизован');
 
       const { data, error: fetchError } = await supabase
         .from('playlists')
@@ -45,7 +45,7 @@ export function usePlaylists() {
 
   const createPlaylist = useCallback(async (name: string): Promise<Playlist> => {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('Not authenticated');
+    if (!user) throw new Error('Не авторизован');
 
     const { data, error: insertError } = await supabase
       .from('playlists')
@@ -76,7 +76,6 @@ export function usePlaylists() {
     await fetchPlaylists();
   }, [fetchPlaylists]);
 
-  /** Adds a track. Duplicates are prevented at DB level via composite PK. */
   const addTrackToPlaylist = useCallback(
     async (playlistId: string, trackId: string) => {
       const { data: posData } = await supabase
@@ -91,7 +90,6 @@ export function usePlaylists() {
         .from('playlist_tracks')
         .insert({ playlist_id: playlistId, track_id: trackId, position: nextPos });
 
-      // 23505 = unique_violation (duplicate). Treat as no-op.
       if (insErr && insErr.code !== '23505') throw insErr;
     },
     []
@@ -122,18 +120,13 @@ export function usePlaylists() {
     []
   );
 
-  /**
-   * Import a playlist by share link or code.
-   * Creates a NEW playlist owned by the current user, referencing the
-   * same tracks as the source playlist (no track duplication).
-   */
   const importPlaylist = useCallback(
     async (linkOrCode: string): Promise<Playlist> => {
       const code = extractShareCode(linkOrCode);
-      if (!code) throw new Error('Invalid share link');
+      if (!code) throw new Error('Неверная ссылка');
 
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
+      if (!user) throw new Error('Не авторизован');
 
       const { data: source, error: srcErr } = await supabase
         .from('playlists')
@@ -141,7 +134,7 @@ export function usePlaylists() {
         .eq('share_code', code)
         .maybeSingle();
       if (srcErr) throw srcErr;
-      if (!source) throw new Error('Playlist not found');
+      if (!source) throw new Error('Плейлист не найден');
 
       const { data: sourceTracks, error: stErr } = await supabase
         .from('playlist_tracks')

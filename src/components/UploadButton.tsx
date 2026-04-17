@@ -31,7 +31,7 @@ const ALLOWED_AUDIO_TYPES = [
   'audio/x-flac',
 ];
 
-const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
 export function UploadButton({ onUpload, uploading }: UploadButtonProps) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -65,7 +65,7 @@ export function UploadButton({ onUpload, uploading }: UploadButtonProps) {
 
       const file = result.assets[0];
       if (file.size && file.size > MAX_FILE_SIZE) {
-        Alert.alert('File too large', 'Maximum file size is 50MB');
+        Alert.alert('Файл слишком большой', 'Максимальный размер файла — 50 МБ');
         return;
       }
 
@@ -75,13 +75,11 @@ export function UploadButton({ onUpload, uploading }: UploadButtonProps) {
         name: file.name,
       });
 
-      // Auto-fill title from filename
       if (!title) {
-        const nameWithoutExt = file.name.replace(/\.[^/.]+$/, '');
-        setTitle(nameWithoutExt);
+        setTitle(file.name.replace(/\.[^/.]+$/, ''));
       }
-    } catch (error) {
-      Alert.alert('Error', 'Failed to pick audio file');
+    } catch {
+      Alert.alert('Ошибка', 'Не удалось выбрать аудиофайл');
     }
   };
 
@@ -101,18 +99,18 @@ export function UploadButton({ onUpload, uploading }: UploadButtonProps) {
         uri: asset.uri,
         mimeType: asset.type === 'image' ? 'image/jpeg' : (asset.mimeType ?? 'image/jpeg'),
       });
-    } catch (error) {
-      Alert.alert('Error', 'Failed to pick cover image');
+    } catch {
+      Alert.alert('Ошибка', 'Не удалось выбрать обложку');
     }
   };
 
   const handleUpload = async () => {
     if (!audioFile) {
-      Alert.alert('Error', 'Please select an audio file');
+      Alert.alert('Ошибка', 'Выберите аудиофайл');
       return;
     }
     if (!title.trim()) {
-      Alert.alert('Error', 'Please enter a track title');
+      Alert.alert('Ошибка', 'Введите название трека');
       return;
     }
 
@@ -129,7 +127,7 @@ export function UploadButton({ onUpload, uploading }: UploadButtonProps) {
       resetForm();
       setModalVisible(false);
     } catch (error: any) {
-      Alert.alert('Upload Failed', error.message);
+      Alert.alert('Ошибка загрузки', error.message);
     }
   };
 
@@ -159,9 +157,8 @@ export function UploadButton({ onUpload, uploading }: UploadButtonProps) {
           style={styles.modalOverlay}
         >
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Upload Track</Text>
+            <Text style={styles.modalTitle}>Загрузить трек</Text>
 
-            {/* Audio File Picker */}
             <TouchableOpacity style={styles.filePicker} onPress={pickAudio}>
               <Ionicons
                 name={audioFile ? 'musical-note' : 'cloud-upload'}
@@ -169,62 +166,47 @@ export function UploadButton({ onUpload, uploading }: UploadButtonProps) {
                 color={audioFile ? COLORS.accent : COLORS.textMuted}
               />
               <Text
-                style={[
-                  styles.filePickerText,
-                  audioFile && styles.filePickerTextSelected,
-                ]}
+                style={[styles.filePickerText, audioFile && styles.filePickerTextSelected]}
                 numberOfLines={1}
               >
-                {audioFile?.name ?? 'Select audio file (mp3, aac, flac)'}
+                {audioFile?.name ?? 'Выберите аудиофайл (mp3, aac, flac)'}
               </Text>
             </TouchableOpacity>
 
-            {/* Title Input */}
             <TextInput
               style={styles.input}
-              placeholder="Track Title *"
+              placeholder="Название трека *"
               placeholderTextColor={COLORS.textMuted}
               value={title}
               onChangeText={setTitle}
             />
 
-            {/* Artist Input */}
             <TextInput
               style={styles.input}
-              placeholder="Artist (optional)"
+              placeholder="Исполнитель (необязательно)"
               placeholderTextColor={COLORS.textMuted}
               value={artist}
               onChangeText={setArtist}
             />
 
-            {/* Cover Image Picker */}
             <TouchableOpacity style={styles.filePicker} onPress={pickCover}>
               <Ionicons
                 name={coverFile ? 'image' : 'image-outline'}
                 size={20}
                 color={coverFile ? COLORS.accent : COLORS.textMuted}
               />
-              <Text
-                style={[
-                  styles.filePickerText,
-                  coverFile && styles.filePickerTextSelected,
-                ]}
-              >
-                {coverFile ? 'Cover image selected' : 'Add cover image (optional)'}
+              <Text style={[styles.filePickerText, coverFile && styles.filePickerTextSelected]}>
+                {coverFile ? 'Обложка выбрана' : 'Добавить обложку (необязательно)'}
               </Text>
             </TouchableOpacity>
 
-            {/* Buttons */}
             <View style={styles.buttonRow}>
               <TouchableOpacity
                 style={styles.cancelButton}
-                onPress={() => {
-                  resetForm();
-                  setModalVisible(false);
-                }}
+                onPress={() => { resetForm(); setModalVisible(false); }}
                 disabled={uploading}
               >
-                <Text style={styles.cancelButtonText}>Cancel</Text>
+                <Text style={styles.cancelButtonText}>Отмена</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -235,7 +217,7 @@ export function UploadButton({ onUpload, uploading }: UploadButtonProps) {
                 {uploading ? (
                   <ActivityIndicator size="small" color={COLORS.background} />
                 ) : (
-                  <Text style={styles.submitButtonText}>Upload</Text>
+                  <Text style={styles.submitButtonText}>Загрузить</Text>
                 )}
               </TouchableOpacity>
             </View>
@@ -297,14 +279,8 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.md,
     padding: SPACING.md,
   },
-  filePickerText: {
-    color: COLORS.textMuted,
-    fontSize: 14,
-    flex: 1,
-  },
-  filePickerTextSelected: {
-    color: COLORS.accent,
-  },
+  filePickerText: { color: COLORS.textMuted, fontSize: 14, flex: 1 },
+  filePickerTextSelected: { color: COLORS.accent },
   buttonRow: {
     flexDirection: 'row',
     gap: SPACING.md,
@@ -317,11 +293,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.surfaceLight,
     alignItems: 'center',
   },
-  cancelButtonText: {
-    color: COLORS.textSecondary,
-    fontSize: 15,
-    fontWeight: '600',
-  },
+  cancelButtonText: { color: COLORS.textSecondary, fontSize: 15, fontWeight: '600' },
   submitButton: {
     flex: 1,
     padding: SPACING.md,
@@ -329,12 +301,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.accent,
     alignItems: 'center',
   },
-  submitButtonDisabled: {
-    opacity: 0.6,
-  },
-  submitButtonText: {
-    color: COLORS.background,
-    fontSize: 15,
-    fontWeight: '700',
-  },
+  submitButtonDisabled: { opacity: 0.6 },
+  submitButtonText: { color: COLORS.background, fontSize: 15, fontWeight: '700' },
 });

@@ -9,7 +9,9 @@
     "splash": {
       "backgroundColor": "#0D0D0D"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.vinylplayer.app"
@@ -27,6 +29,11 @@
           "iCloudContainerEnvironment": "Production"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "daff6f83-a70c-4c99-9dd6-c5f7c83c81bd"
+      }
+    }
   }
 }

@@ -9,6 +9,12 @@ import { usePlayer } from '../hooks/usePlayer';
 import { Track } from '../types/track';
 import { COLORS } from '../theme/colors';
 
+function pluralTracks(n: number): string {
+  if (n % 10 === 1 && n % 100 !== 11) return 'трек';
+  if (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) return 'трека';
+  return 'треков';
+}
+
 export function LibraryScreen() {
   const { tracks, loading, uploading, fetchTracks, uploadTrack, deleteTrack } = useTracks();
   const { currentTrack, isPlaying, playTrackFromList } = usePlayer();
@@ -17,18 +23,18 @@ export function LibraryScreen() {
   const handleTrackDelete = useCallback(
     (track: Track) => {
       Alert.alert(
-        'Delete track',
-        `"${track.title}" will be permanently removed from your library.`,
+        'Удалить трек',
+        `«${track.title}» будет безвозвратно удалён из библиотеки.`,
         [
-          { text: 'Cancel', style: 'cancel' },
+          { text: 'Отмена', style: 'cancel' },
           {
-            text: 'Delete',
+            text: 'Удалить',
             style: 'destructive',
             onPress: async () => {
               try {
                 await deleteTrack(track.id);
               } catch (e: any) {
-                Alert.alert('Delete failed', e.message);
+                Alert.alert('Не удалось удалить', e.message);
               }
             },
           },
@@ -41,7 +47,7 @@ export function LibraryScreen() {
   const handleTrackPress = useCallback(
     async (track: Track) => {
       await playTrackFromList(track, tracks);
-      navigation.navigate('Player');
+      navigation.navigate('Плеер');
     },
     [tracks, playTrackFromList, navigation]
   );
@@ -49,9 +55,9 @@ export function LibraryScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Your Library</Text>
+        <Text style={styles.headerTitle}>Библиотека</Text>
         <Text style={styles.trackCount}>
-          {tracks.length} {tracks.length === 1 ? 'track' : 'tracks'}
+          {tracks.length} {pluralTracks(tracks.length)}
         </Text>
       </View>
 

@@ -45,9 +45,9 @@ export function TrackList({
   if (tracks.length === 0) {
     return (
       <View style={styles.emptyContainer}>
-        <Text style={styles.emptyText}>No tracks yet</Text>
+        <Text style={styles.emptyText}>Треков пока нет</Text>
         <Text style={styles.emptySubtext}>
-          Upload your first track to get started
+          Загрузите первый трек, чтобы начать
         </Text>
       </View>
     );

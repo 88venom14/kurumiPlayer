@@ -23,7 +23,7 @@ export function AuthScreen() {
 
   const handleAuth = async () => {
     if (!email.trim() || !password.trim()) {
-      Alert.alert('Error', 'Please enter email and password');
+      Alert.alert('Ошибка', 'Введите email и пароль');
       return;
     }
 
@@ -35,7 +35,7 @@ export function AuthScreen() {
           password: password.trim(),
         });
         if (error) throw error;
-        Alert.alert('Success', 'Check your email for the confirmation link!');
+        Alert.alert('Успешно', 'Проверьте почту для подтверждения регистрации');
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email: email.trim(),
@@ -44,31 +44,26 @@ export function AuthScreen() {
         if (error) throw error;
       }
     } catch (error: any) {
-      Alert.alert('Error', error.message);
+      Alert.alert('Ошибка', error.message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <LinearGradient
-      colors={['#1A1A1A', COLORS.background]}
-      style={styles.gradient}
-    >
+    <LinearGradient colors={['#1A1A1A', COLORS.background]} style={styles.gradient}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}
       >
-        {/* Logo */}
         <View style={styles.logoContainer}>
           <View style={styles.logoBg}>
             <Ionicons name="disc" size={48} color={COLORS.accent} />
           </View>
-          <Text style={styles.appName}>VinylPlayer</Text>
-          <Text style={styles.tagline}>Premium Music Experience</Text>
+          <Text style={styles.appName}>KurumiPlayer</Text>
+          <Text style={styles.tagline}>Твоя музыкальная библиотека</Text>
         </View>
 
-        {/* Form */}
         <View style={styles.form}>
           <TextInput
             style={styles.input}
@@ -81,7 +76,7 @@ export function AuthScreen() {
           />
           <TextInput
             style={styles.input}
-            placeholder="Password"
+            placeholder="Пароль"
             placeholderTextColor={COLORS.textMuted}
             value={password}
             onChangeText={setPassword}
@@ -97,19 +92,16 @@ export function AuthScreen() {
               <ActivityIndicator color={COLORS.background} />
             ) : (
               <Text style={styles.authButtonText}>
-                {isSignUp ? 'Sign Up' : 'Sign In'}
+                {isSignUp ? 'Зарегистрироваться' : 'Войти'}
               </Text>
             )}
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => setIsSignUp(!isSignUp)}
-            style={styles.switchButton}
-          >
+          <TouchableOpacity onPress={() => setIsSignUp(!isSignUp)} style={styles.switchButton}>
             <Text style={styles.switchText}>
               {isSignUp
-                ? 'Already have an account? Sign In'
-                : "Don't have an account? Sign Up"}
+                ? 'Уже есть аккаунт? Войти'
+                : 'Нет аккаунта? Зарегистрироваться'}
             </Text>
           </TouchableOpacity>
         </View>
@@ -119,9 +111,7 @@ export function AuthScreen() {
 }
 
 const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-  },
+  gradient: { flex: 1 },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -152,9 +142,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: FONTS.mono,
   },
-  form: {
-    gap: SPACING.md,
-  },
+  form: { gap: SPACING.md },
   input: {
     backgroundColor: COLORS.surfaceLight,
     borderRadius: RADIUS.md,
@@ -170,9 +158,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: SPACING.sm,
   },
-  authButtonDisabled: {
-    opacity: 0.6,
-  },
+  authButtonDisabled: { opacity: 0.6 },
   authButtonText: {
     color: COLORS.background,
     fontSize: 16,

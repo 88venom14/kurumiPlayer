@@ -5,7 +5,6 @@ import { getPublicUrl } from '../lib/storage';
 import { supabase } from '../lib/supabase';
 
 interface PlayerStore {
-  // State
   currentTrack: Track | null;
   playlist: Track[];
   isPlaying: boolean;
@@ -17,7 +16,6 @@ interface PlayerStore {
   sound: Audio.Sound | null;
   isLoading: boolean;
 
-  // Actions
   setPlaylist: (tracks: Track[]) => void;
   playTrack: (track: Track) => Promise<void>;
   togglePlayPause: () => Promise<void>;
@@ -47,7 +45,6 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   playTrack: async (track) => {
     const { sound: currentSound, volume } = get();
 
-    // Unload previous sound
     if (currentSound) {
       await currentSound.unloadAsync();
     }
@@ -74,7 +71,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
 
       set({ sound: newSound, isPlaying: true, isLoading: false });
     } catch (error) {
-      console.error('Error playing track:', error);
+      console.error('Ошибка воспроизведения:', error);
       set({ isLoading: false, isPlaying: false });
     }
   },
@@ -112,7 +109,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
         if (repeatMode === 'all') {
           nextIndex = 0;
         } else {
-          return; // End of playlist
+          return;
         }
       }
     }
@@ -124,7 +121,6 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
     const { playlist, currentTrack, progress, playTrack } = get();
     if (playlist.length === 0 || !currentTrack) return;
 
-    // If more than 3 seconds into the track, restart it
     if (progress > 3000) {
       const { sound } = get();
       if (sound) {
@@ -205,7 +201,6 @@ function onPlaybackStatusUpdate(status: AVPlaybackStatus) {
 
   const durationMillis = status.durationMillis ?? 0;
 
-  // Persist duration the first time we learn it from the audio file.
   if (durationMillis > 0) {
     const { currentTrack } = usePlayerStore.getState();
     if (currentTrack && !currentTrack.duration) {
@@ -215,7 +210,7 @@ function onPlaybackStatusUpdate(status: AVPlaybackStatus) {
         .from('tracks')
         .update({ duration: durationMillis })
         .eq('id', currentTrack.id)
-        .then(() => {});
+        .then(() => { });
     }
   }
 

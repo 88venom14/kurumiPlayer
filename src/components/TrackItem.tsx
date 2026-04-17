@@ -110,7 +110,6 @@ export function TrackItem({
       delayLongPress={400}
       activeOpacity={0.7}
     >
-      {/* Track Number / Equalizer */}
       <View style={styles.numberContainer}>
         {isActive && isPlaying ? (
           <EqualizerBars />
@@ -121,7 +120,6 @@ export function TrackItem({
         )}
       </View>
 
-      {/* Cover Thumbnail */}
       <View style={styles.thumbnail}>
         {coverUrl ? (
           <Image source={{ uri: coverUrl }} style={styles.thumbnailImage} />
@@ -132,7 +130,6 @@ export function TrackItem({
         )}
       </View>
 
-      {/* Track Info */}
       <View style={styles.info}>
         <Text
           style={[styles.title, isActive && styles.activeText]}
@@ -141,11 +138,10 @@ export function TrackItem({
           {track.title}
         </Text>
         <Text style={styles.artist} numberOfLines={1}>
-          {track.artist ?? 'Unknown Artist'}
+          {track.artist ?? 'Неизвестный исполнитель'}
         </Text>
       </View>
 
-      {/* Right slot: duration / playlist remove / library delete */}
       {onRemove ? (
         <TouchableOpacity onPress={onRemove} hitSlop={10} style={styles.removeBtn}>
           <Ionicons name="remove-circle-outline" size={22} color={COLORS.textMuted} />

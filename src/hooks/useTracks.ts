@@ -30,7 +30,7 @@ export function useTracks() {
       setError(null);
 
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
+      if (!user) throw new Error('Не авторизован');
 
       const { data, error: fetchError } = await supabase
         .from('tracks')
@@ -53,17 +53,15 @@ export function useTracks() {
       setError(null);
 
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
+      if (!user) throw new Error('Не авторизован');
 
       const trackId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
         const r = Math.random() * 16 | 0;
         return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
       });
 
-      // Read duration from local file before uploading (free, no network)
       const duration = await readLocalDuration(upload.audioUri);
 
-      // Upload audio file
       const filePath = await uploadAudio(
         user.id,
         trackId,
@@ -71,7 +69,6 @@ export function useTracks() {
         upload.audioMimeType
       );
 
-      // Upload cover image (optional)
       let coverPath: string | null = null;
       if (upload.coverUri && upload.coverMimeType) {
         coverPath = await uploadCover(
@@ -82,7 +79,6 @@ export function useTracks() {
         );
       }
 
-      // Insert metadata into database
       const { error: insertError } = await supabase.from('tracks').insert({
         id: trackId,
         user_id: user.id,
@@ -95,7 +91,6 @@ export function useTracks() {
 
       if (insertError) throw insertError;
 
-      // Refresh track list
       await fetchTracks();
     } catch (err: any) {
       setError(err.message);
@@ -108,7 +103,6 @@ export function useTracks() {
   const deleteTrack = useCallback(async (trackId: string) => {
     setError(null);
 
-    // Fetch the track first so we know the user_id for storage cleanup
     const track = tracks.find((t) => t.id === trackId);
 
     const { error: deleteError } = await supabase
@@ -121,9 +115,8 @@ export function useTracks() {
       throw deleteError;
     }
 
-    // Delete audio + cover files from storage (best-effort, don't block on errors)
     if (track) {
-      deleteTrackFiles(track.user_id, trackId).catch(() => {});
+      deleteTrackFiles(track.user_id, trackId).catch(() => { });
     }
 
     await fetchTracks();
