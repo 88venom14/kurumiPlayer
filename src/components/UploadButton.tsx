@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   TextInput,
   Modal,
-  StyleSheet,
   Alert,
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -14,8 +13,9 @@ import {
 import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS, RADIUS, SPACING } from '../theme/colors';
+import { COLORS } from '../theme/colors';
 import { TrackUpload } from '../types/track';
+import { styles } from '../styles/UploadButton.styles';
 
 interface UploadButtonProps {
   onUpload: (data: TrackUpload) => Promise<void>;
@@ -228,79 +228,3 @@ export function UploadButton({ onUpload, uploading }: UploadButtonProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  uploadFab: {
-    position: 'absolute',
-    bottom: 24,
-    right: 24,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: COLORS.accent,
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 8,
-    shadowColor: COLORS.accent,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.7)',
-    justifyContent: 'flex-end',
-  },
-  modalContent: {
-    backgroundColor: COLORS.surface,
-    borderTopLeftRadius: RADIUS.xl,
-    borderTopRightRadius: RADIUS.xl,
-    padding: SPACING.lg,
-    gap: SPACING.md,
-  },
-  modalTitle: {
-    color: COLORS.text,
-    fontSize: 20,
-    fontWeight: '700',
-    textAlign: 'center',
-    marginBottom: SPACING.sm,
-  },
-  input: {
-    backgroundColor: COLORS.surfaceLight,
-    borderRadius: RADIUS.md,
-    padding: SPACING.md,
-    color: COLORS.text,
-    fontSize: 15,
-  },
-  filePicker: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.sm,
-    backgroundColor: COLORS.surfaceLight,
-    borderRadius: RADIUS.md,
-    padding: SPACING.md,
-  },
-  filePickerText: { color: COLORS.textMuted, fontSize: 14, flex: 1 },
-  filePickerTextSelected: { color: COLORS.accent },
-  buttonRow: {
-    flexDirection: 'row',
-    gap: SPACING.md,
-    marginTop: SPACING.sm,
-  },
-  cancelButton: {
-    flex: 1,
-    padding: SPACING.md,
-    borderRadius: RADIUS.md,
-    backgroundColor: COLORS.surfaceLight,
-    alignItems: 'center',
-  },
-  cancelButtonText: { color: COLORS.textSecondary, fontSize: 15, fontWeight: '600' },
-  submitButton: {
-    flex: 1,
-    padding: SPACING.md,
-    borderRadius: RADIUS.md,
-    backgroundColor: COLORS.accent,
-    alignItems: 'center',
-  },
-  submitButtonDisabled: { opacity: 0.6 },
-  submitButtonText: { color: COLORS.background, fontSize: 15, fontWeight: '700' },
-});

@@ -6,7 +6,7 @@ import { LibraryScreen } from '../screens/LibraryScreen';
 import { PlaylistsScreen } from '../screens/PlaylistsScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { COLORS } from '../theme/colors';
-import { StyleSheet, View } from 'react-native';
+import { styles } from '../styles/MainTabs.styles';
 
 const Tab = createBottomTabNavigator();
 
@@ -61,17 +61,3 @@ export function MainTabs() {
   );
 }
 
-const styles = StyleSheet.create({
-  tabBar: {
-    backgroundColor: COLORS.surface,
-    borderTopColor: COLORS.surfaceLight,
-    borderTopWidth: 1,
-    height: 88,
-    paddingBottom: 24,
-    paddingTop: 8,
-  },
-  tabBarLabel: {
-    fontSize: 11,
-    fontWeight: '600',
-  },
-});

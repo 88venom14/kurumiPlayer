@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 import { Vinyl } from './Vinyl';
 import { Controls } from './Controls';
 import { ProgressBar } from './ProgressBar';
 import { VolumeSlider } from './VolumeSlider';
 import { usePlayer } from '../hooks/usePlayer';
-import { COLORS, FONTS } from '../theme/colors';
+import { styles } from '../styles/Player.styles';
 
 export function Player() {
   const {
@@ -70,32 +70,3 @@ export function Player() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 12,
-  },
-  vinylContainer: {
-    marginBottom: 16,
-  },
-  trackInfo: {
-    alignItems: 'center',
-    paddingHorizontal: 32,
-    gap: 4,
-  },
-  title: {
-    color: COLORS.text,
-    fontSize: 22,
-    fontWeight: '700',
-    fontFamily: FONTS.serif,
-    textAlign: 'center',
-  },
-  artist: {
-    color: COLORS.textSecondary,
-    fontSize: 13,
-    fontFamily: FONTS.mono,
-    textAlign: 'center',
-  },
-});

@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Player } from '../components/Player';
 import { COLORS } from '../theme/colors';
+import { styles } from '../styles/PlayerScreen.styles';
 
 export function PlayerScreen() {
   return (
@@ -18,11 +19,3 @@ export function PlayerScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-  },
-});

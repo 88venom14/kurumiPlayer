@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
+import { styles } from '../styles/VolumeSlider.styles';
 
 interface VolumeSliderProps {
   volume: number;
@@ -36,16 +37,3 @@ export function VolumeSlider({ volume, onVolumeChange }: VolumeSliderProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-    gap: 8,
-    paddingBottom: 8,
-  },
-  slider: {
-    flex: 1,
-    height: 40,
-  },
-});

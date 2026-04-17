@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react';
-import { FlatList, StyleSheet, View, Text, RefreshControl } from 'react-native';
+import { FlatList, View, Text, RefreshControl } from 'react-native';
 import { Track } from '../types/track';
 import { TrackItem } from './TrackItem';
 import { COLORS } from '../theme/colors';
+import { styles } from '../styles/TrackList.styles';
 
 interface TrackListProps {
   tracks: Track[];
@@ -71,25 +72,3 @@ export function TrackList({
   );
 }
 
-const styles = StyleSheet.create({
-  list: {
-    paddingVertical: 8,
-  },
-  emptyContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 40,
-    gap: 8,
-  },
-  emptyText: {
-    color: COLORS.textSecondary,
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  emptySubtext: {
-    color: COLORS.textMuted,
-    fontSize: 14,
-    textAlign: 'center',
-  },
-});

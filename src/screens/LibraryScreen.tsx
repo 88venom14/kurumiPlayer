@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, ActivityIndicator, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { TrackList } from '../components/TrackList';
@@ -8,6 +8,7 @@ import { useTracks } from '../hooks/useTracks';
 import { usePlayer } from '../hooks/usePlayer';
 import { Track } from '../types/track';
 import { COLORS } from '../theme/colors';
+import { styles } from '../styles/LibraryScreen.styles';
 
 function pluralTracks(n: number): string {
   if (n % 10 === 1 && n % 100 !== 11) return 'трек';
@@ -82,29 +83,3 @@ export function LibraryScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-  },
-  header: {
-    paddingHorizontal: 24,
-    paddingTop: 16,
-    paddingBottom: 12,
-    gap: 2,
-  },
-  headerTitle: {
-    color: COLORS.text,
-    fontSize: 28,
-    fontWeight: '800',
-  },
-  trackCount: {
-    color: COLORS.textMuted,
-    fontSize: 13,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
