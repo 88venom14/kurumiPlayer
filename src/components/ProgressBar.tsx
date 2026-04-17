@@ -3,13 +3,7 @@ import { View, Text } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { COLORS } from '../theme/colors';
 import { styles } from '../styles/ProgressBar.styles';
-
-interface ProgressBarProps {
-  progress: number;
-  duration: number;
-  onSeek: (value: number) => void;
-  formatTime: (millis: number) => string;
-}
+import { ProgressBarProps } from '../types/props';
 
 export function ProgressBar({
   progress,

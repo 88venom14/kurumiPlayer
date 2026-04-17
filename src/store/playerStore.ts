@@ -1,32 +1,9 @@
 import { create } from 'zustand';
 import { Audio, AVPlaybackStatus } from 'expo-av';
 import { Track, RepeatMode } from '../types/track';
+import { PlayerStore } from '../types/store';
 import { getPublicUrl } from '../lib/storage';
 import { supabase } from '../lib/supabase';
-
-interface PlayerStore {
-  currentTrack: Track | null;
-  playlist: Track[];
-  isPlaying: boolean;
-  isShuffled: boolean;
-  repeatMode: RepeatMode;
-  progress: number;
-  duration: number;
-  volume: number;
-  sound: Audio.Sound | null;
-  isLoading: boolean;
-
-  setPlaylist: (tracks: Track[]) => void;
-  playTrack: (track: Track) => Promise<void>;
-  togglePlayPause: () => Promise<void>;
-  playNext: () => Promise<void>;
-  playPrevious: () => Promise<void>;
-  toggleShuffle: () => void;
-  cycleRepeatMode: () => void;
-  seekTo: (position: number) => Promise<void>;
-  setVolume: (volume: number) => Promise<void>;
-  cleanup: () => Promise<void>;
-}
 
 export const usePlayerStore = create<PlayerStore>((set, get) => ({
   currentTrack: null,

@@ -4,11 +4,7 @@ import Slider from '@react-native-community/slider';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
 import { styles } from '../styles/VolumeSlider.styles';
-
-interface VolumeSliderProps {
-  volume: number;
-  onVolumeChange: (value: number) => void;
-}
+import { VolumeSliderProps } from '../types/props';
 
 export function VolumeSlider({ volume, onVolumeChange }: VolumeSliderProps) {
   return (

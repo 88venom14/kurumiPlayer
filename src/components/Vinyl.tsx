@@ -10,12 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { getPublicUrl } from '../lib/storage';
 import { styles } from '../styles/Vinyl.styles';
-
-interface VinylProps {
-  isPlaying: boolean;
-  coverPath: string | null;
-  size?: number;
-}
+import { VinylProps } from '../types/props';
 
 export function Vinyl({ isPlaying, coverPath, size = 280 }: VinylProps) {
   const rotation = useSharedValue(0);

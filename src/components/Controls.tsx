@@ -7,20 +7,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
-import { RepeatMode } from '../types/track';
 import { styles } from '../styles/Controls.styles';
-
-interface ControlsProps {
-  isPlaying: boolean;
-  isShuffled: boolean;
-  repeatMode: RepeatMode;
-  onPlayPause: () => void;
-  onNext: () => void;
-  onPrevious: () => void;
-  onShuffle: () => void;
-  onRepeat: () => void;
-  isLoading?: boolean;
-}
+import { ControlsProps } from '../types/props';
 
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 

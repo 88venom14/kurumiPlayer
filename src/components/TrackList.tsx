@@ -4,17 +4,7 @@ import { Track } from '../types/track';
 import { TrackItem } from './TrackItem';
 import { COLORS } from '../theme/colors';
 import { styles } from '../styles/TrackList.styles';
-
-interface TrackListProps {
-  tracks: Track[];
-  currentTrackId: string | null;
-  isPlaying: boolean;
-  onTrackPress: (track: Track) => void;
-  onTrackLongPress?: (track: Track) => void;
-  onTrackDelete?: (track: Track) => void;
-  refreshing: boolean;
-  onRefresh: () => void;
-}
+import { TrackListProps } from '../types/props';
 
 export function TrackList({
   tracks,

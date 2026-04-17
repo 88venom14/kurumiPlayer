@@ -12,11 +12,7 @@ import { useTracks } from '../hooks/useTracks';
 import { getListenedMs, usePlayerStore } from '../store/playerStore';
 import { COLORS } from '../theme/colors';
 import { styles } from '../styles/ProfileScreen.styles';
-
-interface Profile {
-  display_name: string;
-  avatar_path: string | null;
-}
+import { Profile } from '../types/profile';
 
 function formatListened(ms: number): string {
   const totalMinutes = Math.floor(ms / 60000);

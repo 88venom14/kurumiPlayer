@@ -14,13 +14,8 @@ import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
-import { TrackUpload } from '../types/track';
 import { styles } from '../styles/UploadButton.styles';
-
-interface UploadButtonProps {
-  onUpload: (data: TrackUpload) => Promise<void>;
-  uploading: boolean;
-}
+import { UploadButtonProps } from '../types/props';
 
 const ALLOWED_AUDIO_TYPES = [
   'audio/mpeg',

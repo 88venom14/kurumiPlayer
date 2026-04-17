@@ -8,23 +8,10 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
-import { Track } from '../types/track';
 import { COLORS } from '../theme/colors';
 import { getPublicUrl } from '../lib/storage';
 import { styles, eqStyles } from '../styles/TrackItem.styles';
-
-interface TrackItemProps {
-  track: Track;
-  index: number;
-  isActive: boolean;
-  isPlaying: boolean;
-  onPress: () => void;
-  onLongPress?: () => void;
-  onRemove?: () => void;
-  onDelete?: () => void;
-  onSave?: () => void;
-  isSaved?: boolean;
-}
+import { TrackItemProps } from '../types/props';
 
 function EqualizerBars() {
   const bar1 = useSharedValue(0.3);
