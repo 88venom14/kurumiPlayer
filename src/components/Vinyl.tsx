@@ -44,17 +44,6 @@ export function Vinyl({ isPlaying, coverPath, size = 280 }: VinylProps) {
 
   return (
     <View style={[styles.container, { width: size, height: size }]}>
-      <View
-        style={[
-          styles.glow,
-          {
-            width: size + 30,
-            height: size + 30,
-            borderRadius: (size + 30) / 2,
-          },
-        ]}
-      />
-
       <Animated.View
         style={[
           styles.disc,
@@ -62,20 +51,6 @@ export function Vinyl({ isPlaying, coverPath, size = 280 }: VinylProps) {
           animatedStyle,
         ]}
       >
-        {[0.45, 0.55, 0.65, 0.75, 0.85, 0.95].map((ratio, index) => (
-          <View
-            key={index}
-            style={[
-              styles.groove,
-              {
-                width: size * ratio,
-                height: size * ratio,
-                borderRadius: (size * ratio) / 2,
-              },
-            ]}
-          />
-        ))}
-
         <View
           style={[
             styles.center,
@@ -116,4 +91,3 @@ export function Vinyl({ isPlaying, coverPath, size = 280 }: VinylProps) {
     </View>
   );
 }
-

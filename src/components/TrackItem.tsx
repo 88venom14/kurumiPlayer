@@ -22,6 +22,8 @@ interface TrackItemProps {
   onLongPress?: () => void;
   onRemove?: () => void;
   onDelete?: () => void;
+  onSave?: () => void;
+  isSaved?: boolean;
 }
 
 function EqualizerBars() {
@@ -79,6 +81,8 @@ export function TrackItem({
   onLongPress,
   onRemove,
   onDelete,
+  onSave,
+  isSaved,
 }: TrackItemProps) {
   const coverUrl = track.cover_path ? getPublicUrl(track.cover_path) : null;
 
@@ -130,17 +134,26 @@ export function TrackItem({
         </Text>
       </View>
 
+      {onSave && (
+        <TouchableOpacity onPress={isSaved ? undefined : onSave} hitSlop={10} style={styles.removeBtn}>
+          <Ionicons
+            name={isSaved ? 'checkmark-circle' : 'download-outline'}
+            size={20}
+            color={isSaved ? COLORS.accent : COLORS.textMuted}
+          />
+        </TouchableOpacity>
+      )}
       {onRemove ? (
         <TouchableOpacity onPress={onRemove} hitSlop={10} style={styles.removeBtn}>
           <Ionicons name="remove-circle-outline" size={22} color={COLORS.textMuted} />
         </TouchableOpacity>
-      ) : onDelete ? (
+      ) : !onSave && onDelete ? (
         <TouchableOpacity onPress={onDelete} hitSlop={10} style={styles.removeBtn}>
           <Ionicons name="trash-outline" size={20} color={COLORS.textMuted} />
         </TouchableOpacity>
-      ) : (
+      ) : !onSave && !onRemove ? (
         <Text style={styles.duration}>{formatDuration(track.duration)}</Text>
-      )}
+      ) : null}
     </TouchableOpacity>
   );
 }

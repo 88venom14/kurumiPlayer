@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Audio } from 'expo-av';
+import * as FileSystem from 'expo-file-system';
 import { supabase } from '../lib/supabase';
 import { Track, TrackUpload } from '../types/track';
-import { uploadAudio, uploadCover, deleteTrackFiles } from '../lib/storage';
+import { uploadAudio, uploadCover, deleteTrackFiles, getPublicUrl } from '../lib/storage';
 
 async function readLocalDuration(uri: string): Promise<number | null> {
   try {
@@ -100,6 +101,49 @@ export function useTracks() {
     }
   }, [fetchTracks]);
 
+  const copyTrackToLibrary = useCallback(async (track: Track) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Не авторизован');
+
+    const newId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      const r = Math.random() * 16 | 0;
+      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+
+    const ext = track.file_path.split('.').pop() ?? 'mp3';
+    const mimeType = ext === 'flac' ? 'audio/flac' : ext === 'aac' ? 'audio/aac' : 'audio/mpeg';
+    const tempAudio = FileSystem.cacheDirectory + `copy_audio_${Date.now()}.${ext}`;
+    const audioDownload = await FileSystem.downloadAsync(getPublicUrl(track.file_path), tempAudio);
+    if (audioDownload.status !== 200) throw new Error('Не удалось скачать аудио');
+
+    const filePath = await uploadAudio(user.id, newId, tempAudio, mimeType);
+    await FileSystem.deleteAsync(tempAudio, { idempotent: true });
+
+    let coverPath: string | null = null;
+    if (track.cover_path) {
+      const coverExt = track.cover_path.split('.').pop() ?? 'jpg';
+      const coverMime = coverExt === 'png' ? 'image/png' : 'image/jpeg';
+      const tempCover = FileSystem.cacheDirectory + `copy_cover_${Date.now()}.${coverExt}`;
+      const coverDownload = await FileSystem.downloadAsync(getPublicUrl(track.cover_path), tempCover);
+      if (coverDownload.status === 200) {
+        coverPath = await uploadCover(user.id, newId, tempCover, coverMime);
+      }
+      await FileSystem.deleteAsync(tempCover, { idempotent: true });
+    }
+
+    const { error: insertError } = await supabase.from('tracks').insert({
+      id: newId,
+      user_id: user.id,
+      title: track.title,
+      artist: track.artist,
+      duration: track.duration,
+      file_path: filePath,
+      cover_path: coverPath,
+    });
+    if (insertError) throw insertError;
+    await fetchTracks();
+  }, [fetchTracks]);
+
   const deleteTrack = useCallback(async (trackId: string) => {
     setError(null);
 
@@ -134,5 +178,6 @@ export function useTracks() {
     fetchTracks,
     uploadTrack,
     deleteTrack,
+    copyTrackToLibrary,
   };
 }

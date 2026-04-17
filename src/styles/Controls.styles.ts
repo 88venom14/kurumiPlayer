@@ -19,11 +19,6 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.accent,
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 8,
-    shadowColor: COLORS.accent,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
   },
   repeatOneBadge: {
     position: 'absolute',

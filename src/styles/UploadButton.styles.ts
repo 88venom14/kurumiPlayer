@@ -12,11 +12,6 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.accent,
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 8,
-    shadowColor: COLORS.accent,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
   },
   modalOverlay: {
     flex: 1,
@@ -52,8 +47,14 @@ export const styles = StyleSheet.create({
     borderRadius: RADIUS.md,
     padding: SPACING.md,
   },
-  filePickerText: { color: COLORS.textMuted, fontSize: 14, flex: 1 },
-  filePickerTextSelected: { color: COLORS.accent },
+  filePickerText: {
+    color: COLORS.textMuted,
+    fontSize: 14,
+    flex: 1
+  },
+  filePickerTextSelected: {
+    color: COLORS.accent
+  },
   buttonRow: {
     flexDirection: 'row',
     gap: SPACING.md,
@@ -66,7 +67,11 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.surfaceLight,
     alignItems: 'center',
   },
-  cancelButtonText: { color: COLORS.textSecondary, fontSize: 15, fontWeight: '600' },
+  cancelButtonText: {
+    color: COLORS.textSecondary,
+    fontSize: 15,
+    fontWeight: '600'
+  },
   submitButton: {
     flex: 1,
     padding: SPACING.md,
@@ -74,6 +79,12 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.accent,
     alignItems: 'center',
   },
-  submitButtonDisabled: { opacity: 0.6 },
-  submitButtonText: { color: COLORS.background, fontSize: 15, fontWeight: '700' },
+  submitButtonDisabled: {
+    opacity: 0.6
+  },
+  submitButtonText: {
+    color: COLORS.background,
+    fontSize: 15,
+    fontWeight: '700'
+  },
 });

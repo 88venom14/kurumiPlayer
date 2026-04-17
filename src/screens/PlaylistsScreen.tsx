@@ -189,9 +189,12 @@ function PlaylistDetail({
   const [rows, setRows] = useState<PlaylistTrack[]>([]);
   const [loading, setLoading] = useState(true);
   const [addOpen, setAddOpen] = useState(false);
-  const { tracks: libraryTracks } = useTracks();
+  const [savingIds, setSavingIds] = useState<Set<string>>(new Set());
+  const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
+  const { tracks: libraryTracks, copyTrackToLibrary } = useTracks();
   const { currentTrack, isPlaying, playTrackFromList } = usePlayer();
   const navigation = useNavigation<any>();
+  const libraryTrackIds = new Set(libraryTracks.map((t) => t.id));
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -210,7 +213,7 @@ function PlaylistDetail({
     const link = buildShareLink(playlist.share_code);
     try {
       await Share.share({
-        message: `Посмотри мой плейлист «${playlist.name}» в KurumiPlayer:\n${link}`,
+        message: `Йоу это мой плейлист 556 67 «${playlist.name}» в KurumiPlayer:\n${link}`,
       });
     } catch { }
   };
@@ -227,6 +230,18 @@ function PlaylistDetail({
         },
       },
     ]);
+  };
+
+  const handleSave = async (track: Track) => {
+    setSavingIds((prev) => new Set(prev).add(track.id));
+    try {
+      await copyTrackToLibrary(track);
+      setSavedIds((prev) => new Set(prev).add(track.id));
+    } catch (e: any) {
+      Alert.alert('Ошибка', e.message);
+    } finally {
+      setSavingIds((prev) => { const s = new Set(prev); s.delete(track.id); return s; });
+    }
   };
 
   const playlistTracks: Track[] = rows.map((r) => r.track);
@@ -269,19 +284,26 @@ function PlaylistDetail({
           data={rows}
           keyExtractor={(r) => r.track_id}
           contentContainerStyle={{ paddingVertical: 8 }}
-          renderItem={({ item, index }) => (
-            <TrackItem
-              track={item.track}
-              index={index}
-              isActive={currentTrack?.id === item.track.id}
-              isPlaying={isPlaying && currentTrack?.id === item.track.id}
-              onPress={async () => {
-                await playTrackFromList(item.track, playlistTracks);
-                navigation.navigate('Плеер');
-              }}
-              onRemove={() => handleRemove(item.track_id, item.track.title)}
-            />
-          )}
+          renderItem={({ item, index }) => {
+            const inLibrary = libraryTrackIds.has(item.track.id);
+            const alreadySaved = inLibrary || savedIds.has(item.track.id);
+            const isSaving = savingIds.has(item.track.id);
+            return (
+              <TrackItem
+                track={item.track}
+                index={index}
+                isActive={currentTrack?.id === item.track.id}
+                isPlaying={isPlaying && currentTrack?.id === item.track.id}
+                onPress={async () => {
+                  await playTrackFromList(item.track, playlistTracks);
+                  navigation.navigate('Плеер');
+                }}
+                onRemove={inLibrary ? () => handleRemove(item.track_id, item.track.title) : undefined}
+                onSave={!inLibrary ? () => handleSave(item.track) : undefined}
+                isSaved={alreadySaved || isSaving}
+              />
+            );
+          }}
         />
       )}
 
