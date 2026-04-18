@@ -4,8 +4,7 @@ import { Track, RepeatMode } from '../types/track';
 import { PlayerStore } from '../types/store';
 import { getPublicUrl } from '../lib/storage';
 import { supabase } from '../lib/supabase';
-import { addListenedMs, getListenedMs } from '../lib/listenedTime';
-export { getListenedMs };
+import { addListenedMs } from '../lib/listenedTime';
 
 export const usePlayerStore = create<PlayerStore>((set, get) => ({
   currentTrack: null,
@@ -73,6 +72,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
     if (playlist.length === 0 || !currentTrack) return;
 
     const currentIndex = playlist.findIndex((t) => t.id === currentTrack.id);
+    if (currentIndex === -1) return;
 
     if (repeatMode === 'one') {
       await playTrack(currentTrack);
@@ -110,6 +110,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
     }
 
     const currentIndex = playlist.findIndex((t) => t.id === currentTrack.id);
+    if (currentIndex === -1) return;
     const prevIndex = currentIndex > 0 ? currentIndex - 1 : playlist.length - 1;
     await playTrack(playlist[prevIndex]);
   },

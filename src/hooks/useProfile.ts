@@ -31,8 +31,9 @@ export function useProfile() {
       .eq('id', user.id)
       .single();
 
-    const displayName = (data as Profile | null)?.display_name ?? '';
-    const avatar = (data as Profile | null)?.avatar_path ?? null;
+    const profile = data as Profile | null;
+    const displayName = profile?.display_name ?? '';
+    const avatar = profile?.avatar_path ?? null;
     setName(displayName);
     setSavedName(displayName);
     setAvatarPath(avatar);

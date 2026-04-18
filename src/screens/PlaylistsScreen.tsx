@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, ActivityIndicator, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -27,17 +27,18 @@ export function PlaylistsScreen() {
   const [createOpen, setCreateOpen] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
 
-  if (selectedId) {
-    const playlist = playlists.find((p) => p.id === selectedId);
-    if (!playlist) {
-      setSelectedId(null);
-      return null;
-    }
+  const selectedPlaylist = selectedId ? playlists.find((p) => p.id === selectedId) ?? null : null;
+
+  useEffect(() => {
+    if (selectedId && !loading && !selectedPlaylist) setSelectedId(null);
+  }, [selectedId, selectedPlaylist, loading]);
+
+  if (selectedPlaylist) {
     return (
       <PlaylistDetail
-        playlist={playlist}
+        playlist={selectedPlaylist}
         onBack={() => { setSelectedId(null); fetchPlaylists(); }}
-        onDelete={async () => { await deletePlaylist(playlist.id); setSelectedId(null); }}
+        onDelete={async () => { await deletePlaylist(selectedPlaylist.id); setSelectedId(null); }}
         addTrack={addTrackToPlaylist}
         removeTrack={removeTrackFromPlaylist}
         getPlaylistTracks={getPlaylistTracks}

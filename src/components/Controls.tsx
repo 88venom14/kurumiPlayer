@@ -35,11 +35,6 @@ export function Controls({
     onPlayPause();
   };
 
-  const getRepeatIcon = (): keyof typeof Ionicons.glyphMap => {
-    if (repeatMode === 'one') return 'repeat';
-    return 'repeat';
-  };
-
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={onShuffle} style={styles.sideButton}>
@@ -74,7 +69,7 @@ export function Controls({
       <TouchableOpacity onPress={onRepeat} style={styles.sideButton}>
         <View>
           <Ionicons
-            name={getRepeatIcon()}
+            name="repeat"
             size={24}
             color={repeatMode !== 'off' ? COLORS.accent : COLORS.textMuted}
           />

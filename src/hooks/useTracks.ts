@@ -4,6 +4,7 @@ import * as FileSystem from 'expo-file-system';
 import { supabase } from '../lib/supabase';
 import { Track, TrackUpload } from '../types/track';
 import { uploadAudio, uploadCover, deleteTrackFiles, getPublicUrl } from '../lib/storage';
+import { generateUuid } from '../utils/format';
 
 async function readLocalDuration(uri: string): Promise<number | null> {
   try {
@@ -56,10 +57,7 @@ export function useTracks() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Не авторизован');
 
-      const trackId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-        const r = Math.random() * 16 | 0;
-        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-      });
+      const trackId = generateUuid();
 
       const duration = await readLocalDuration(upload.audioUri);
 
@@ -105,10 +103,7 @@ export function useTracks() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('Не авторизован');
 
-    const newId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-      const r = Math.random() * 16 | 0;
-      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-    });
+    const newId = generateUuid();
 
     const ext = track.file_path.split('.').pop() ?? 'mp3';
     const mimeType = ext === 'flac' ? 'audio/flac' : ext === 'aac' ? 'audio/aac' : 'audio/mpeg';

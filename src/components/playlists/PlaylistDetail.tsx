@@ -51,9 +51,11 @@ export function PlaylistDetail({
     const link = buildShareLink(playlist.share_code);
     try {
       await Share.share({
-        message: `Йоу это мой плейлист 556 67 «${playlist.name}» в KurumiPlayer:\n${link}`,
+        message: `Слушай плейлист «${playlist.name}» в KurumiPlayer:\n${link}`,
       });
-    } catch { }
+    } catch (e: any) {
+      Alert.alert('Ошибка', e.message);
+    }
   };
 
   const handleRemove = (trackId: string, title: string) => {
