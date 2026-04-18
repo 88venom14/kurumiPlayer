@@ -40,6 +40,7 @@ export interface TrackItemProps {
   onDelete?: () => void;
   onSave?: () => void;
   isSaved?: boolean;
+  isSaving?: boolean;
 }
 
 export interface TrackListProps {
@@ -47,7 +48,6 @@ export interface TrackListProps {
   currentTrackId: string | null;
   isPlaying: boolean;
   onTrackPress: (track: Track) => void;
-  onTrackLongPress?: (track: Track) => void;
   onTrackDelete?: (track: Track) => void;
   refreshing: boolean;
   onRefresh: () => void;

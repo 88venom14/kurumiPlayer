@@ -1,0 +1,2 @@
+export const AUDIO_DOWNLOAD_TIMEOUT_MS = 60_000;
+export const COVER_DOWNLOAD_TIMEOUT_MS = 30_000;

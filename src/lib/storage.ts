@@ -1,7 +1,20 @@
 import * as FileSystem from 'expo-file-system';
 import { supabase, SUPABASE_URL, SUPABASE_ANON_KEY } from './supabase';
+import { TRACKS_BUCKET as BUCKET } from '../constants/storage';
 
-const BUCKET = 'tracks';
+export async function downloadWithTimeout(
+  url: string,
+  destination: string,
+  timeoutMs: number
+): Promise<FileSystem.FileSystemDownloadResult> {
+  let timerId: ReturnType<typeof setTimeout>;
+  return Promise.race<FileSystem.FileSystemDownloadResult>([
+    FileSystem.downloadAsync(url, destination),
+    new Promise<never>((_, reject) => {
+      timerId = setTimeout(() => reject(new Error('Превышено время загрузки')), timeoutMs);
+    }),
+  ]).finally(() => clearTimeout(timerId!));
+}
 
 async function uploadFile(path: string, fileUri: string, mimeType: string): Promise<void> {
   const { data: { session } } = await supabase.auth.getSession();

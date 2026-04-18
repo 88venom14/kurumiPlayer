@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "VinylPlayer",
-    "slug": "vinyl-player",
+    "name": "Kurumi Player",
+    "slug": "kurumi-player",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -14,13 +14,13 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.vinylplayer.app"
+      "bundleIdentifier": "com.kurumiplayer.app"
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#0D0D0D"
       },
-      "package": "com.vinylplayer.app"
+      "package": "com.kurumiplayer.app"
     },
     "plugins": [
       [

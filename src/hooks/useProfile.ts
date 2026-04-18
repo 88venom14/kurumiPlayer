@@ -3,6 +3,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { Alert } from 'react-native';
 import { supabase } from '../lib/supabase';
 import { uploadAvatar, getPublicUrl } from '../lib/storage';
+import { IMAGE_ASPECT_RATIO, IMAGE_QUALITY } from '../constants/media';
 import { getListenedMs } from '../lib/listenedTime';
 import { usePlayerStore } from '../store/playerStore';
 import { Profile } from '../types/profile';
@@ -65,8 +66,8 @@ export function useProfile() {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [1, 1],
-      quality: 0.8,
+      aspect: IMAGE_ASPECT_RATIO,
+      quality: IMAGE_QUALITY,
     });
     if (result.canceled || !userId) return;
 

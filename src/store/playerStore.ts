@@ -5,6 +5,12 @@ import { PlayerStore } from '../types/store';
 import { getPublicUrl } from '../lib/storage';
 import { supabase } from '../lib/supabase';
 import { addListenedMs } from '../lib/listenedTime';
+import {
+  DEFAULT_VOLUME,
+  PROGRESS_UPDATE_INTERVAL_MS,
+  RESTART_TRACK_THRESHOLD_MS,
+  PLAYBACK_DELTA_MAX_MS,
+} from '../constants/player';
 
 export const usePlayerStore = create<PlayerStore>((set, get) => ({
   currentTrack: null,
@@ -14,7 +20,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   repeatMode: 'off',
   progress: 0,
   duration: 0,
-  volume: 0.8,
+  volume: DEFAULT_VOLUME,
   sound: null,
   isLoading: false,
 
@@ -42,7 +48,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
         {
           shouldPlay: true,
           volume,
-          progressUpdateIntervalMillis: 500,
+          progressUpdateIntervalMillis: PROGRESS_UPDATE_INTERVAL_MS,
         },
         onPlaybackStatusUpdate
       );
@@ -100,7 +106,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
     const { playlist, currentTrack, progress, playTrack } = get();
     if (playlist.length === 0 || !currentTrack) return;
 
-    if (progress > 3000) {
+    if (progress > RESTART_TRACK_THRESHOLD_MS) {
       const { sound } = get();
       if (sound) {
         await sound.setPositionAsync(0);
@@ -159,7 +165,7 @@ function onPlaybackStatusUpdate(status: AVPlaybackStatus) {
   if (status.isPlaying && lastUpdateTs > 0) {
     const elapsed = now - lastUpdateTs;
     const positionDelta = status.positionMillis - lastPosition;
-    if (positionDelta > 0 && positionDelta < 2000 && elapsed < 2000) {
+    if (positionDelta > 0 && positionDelta < PLAYBACK_DELTA_MAX_MS && elapsed < PLAYBACK_DELTA_MAX_MS) {
       addListenedMs(elapsed);
     }
   }

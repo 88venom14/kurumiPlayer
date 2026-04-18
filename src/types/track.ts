@@ -19,14 +19,3 @@ export interface TrackUpload {
 }
 
 export type RepeatMode = 'off' | 'all' | 'one';
-
-export interface PlayerState {
-  currentTrack: Track | null;
-  playlist: Track[];
-  isPlaying: boolean;
-  isShuffled: boolean;
-  repeatMode: RepeatMode;
-  progress: number;
-  duration: number;
-  volume: number;
-}

@@ -11,7 +11,6 @@ export function TrackList({
   currentTrackId,
   isPlaying,
   onTrackPress,
-  onTrackLongPress,
   onTrackDelete,
   refreshing,
   onRefresh,
@@ -24,11 +23,10 @@ export function TrackList({
         isActive={item.id === currentTrackId}
         isPlaying={item.id === currentTrackId && isPlaying}
         onPress={() => onTrackPress(item)}
-        onLongPress={onTrackLongPress ? () => onTrackLongPress(item) : undefined}
         onDelete={onTrackDelete ? () => onTrackDelete(item) : undefined}
       />
     ),
-    [currentTrackId, isPlaying, onTrackPress, onTrackLongPress, onTrackDelete]
+    [currentTrackId, isPlaying, onTrackPress, onTrackDelete]
   );
 
   const keyExtractor = useCallback((item: Track) => item.id, []);

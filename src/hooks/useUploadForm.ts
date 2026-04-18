@@ -5,6 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { TrackUpload } from '../types/track';
 import { AudioFile, CoverFile } from '../types/upload';
 import { ALLOWED_AUDIO_TYPES, MAX_FILE_SIZE } from '../constants/upload';
+import { IMAGE_ASPECT_RATIO, IMAGE_QUALITY } from '../constants/media';
 
 export function useUploadForm(onUpload: (data: TrackUpload) => Promise<void>) {
   const [title, setTitle] = useState('');
@@ -44,8 +45,8 @@ export function useUploadForm(onUpload: (data: TrackUpload) => Promise<void>) {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
-        aspect: [1, 1],
-        quality: 0.8,
+        aspect: IMAGE_ASPECT_RATIO,
+        quality: IMAGE_QUALITY,
       });
       if (result.canceled) return;
 

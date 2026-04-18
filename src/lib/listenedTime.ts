@@ -1,6 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const LISTENED_KEY = 'vinyl_listened_ms';
+import { LISTENED_MS_KEY as LISTENED_KEY } from '../constants/storage';
 
 export async function addListenedMs(ms: number): Promise<void> {
   if (ms <= 0) return;

@@ -10,6 +10,7 @@ import { Track } from '../types/track';
 import { COLORS } from '../theme/colors';
 import { styles } from '../styles/LibraryScreen.styles';
 import { pluralTracks } from '../utils/format';
+import { ROUTE_PLAYER } from '../constants/routes';
 
 export function LibraryScreen() {
   const { tracks, loading, uploading, fetchTracks, uploadTrack, deleteTrack } = useTracks();
@@ -43,7 +44,7 @@ export function LibraryScreen() {
   const handleTrackPress = useCallback(
     async (track: Track) => {
       await playTrackFromList(track, tracks);
-      navigation.navigate('Плеер');
+      navigation.navigate(ROUTE_PLAYER);
     },
     [tracks, playTrackFromList, navigation]
   );

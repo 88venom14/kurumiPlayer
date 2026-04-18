@@ -11,6 +11,7 @@ import { TrackItem } from '../TrackItem';
 import { COLORS } from '../../theme/colors';
 import { styles } from '../../styles/PlaylistsScreen.styles';
 import { AddTracksModal } from './AddTracksModal';
+import { ROUTE_PLAYER } from '../../constants/routes';
 
 interface PlaylistDetailProps {
   playlist: PlaylistWithCount;
@@ -136,11 +137,12 @@ export function PlaylistDetail({
                 isPlaying={isPlaying && currentTrack?.id === item.track.id}
                 onPress={async () => {
                   await playTrackFromList(item.track, playlistTracks);
-                  navigation.navigate('Плеер');
+                  navigation.navigate(ROUTE_PLAYER);
                 }}
                 onRemove={inLibrary ? () => handleRemove(item.track_id, item.track.title) : undefined}
                 onSave={!inLibrary ? () => handleSave(item.track) : undefined}
-                isSaved={alreadySaved || isSaving}
+                isSaved={alreadySaved}
+                isSaving={isSaving}
               />
             );
           }}

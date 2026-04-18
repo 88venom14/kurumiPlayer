@@ -3,7 +3,8 @@ import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system';
 import { supabase } from '../lib/supabase';
 import { Track, TrackUpload } from '../types/track';
-import { uploadAudio, uploadCover, deleteTrackFiles, getPublicUrl } from '../lib/storage';
+import { uploadAudio, uploadCover, deleteTrackFiles, getPublicUrl, downloadWithTimeout } from '../lib/storage';
+import { AUDIO_DOWNLOAD_TIMEOUT_MS, COVER_DOWNLOAD_TIMEOUT_MS } from '../constants/network';
 import { generateUuid } from '../utils/format';
 
 async function readLocalDuration(uri: string): Promise<number | null> {
@@ -104,26 +105,34 @@ export function useTracks() {
     if (!user) throw new Error('Не авторизован');
 
     const newId = generateUuid();
-
     const ext = track.file_path.split('.').pop() ?? 'mp3';
     const mimeType = ext === 'flac' ? 'audio/flac' : ext === 'aac' ? 'audio/aac' : 'audio/mpeg';
-    const tempAudio = FileSystem.cacheDirectory + `copy_audio_${Date.now()}.${ext}`;
-    const audioDownload = await FileSystem.downloadAsync(getPublicUrl(track.file_path), tempAudio);
-    if (audioDownload.status !== 200) throw new Error('Не удалось скачать аудио');
+    const tempAudio = `${FileSystem.cacheDirectory}copy_audio_${Date.now()}.${ext}`;
 
-    const filePath = await uploadAudio(user.id, newId, tempAudio, mimeType);
-    await FileSystem.deleteAsync(tempAudio, { idempotent: true });
+    let filePath: string;
+    try {
+      const audioDownload = await downloadWithTimeout(getPublicUrl(track.file_path), tempAudio, AUDIO_DOWNLOAD_TIMEOUT_MS);
+      if (audioDownload.status !== 200)
+        throw new Error(`Не удалось скачать аудио (статус ${audioDownload.status})`);
+      filePath = await uploadAudio(user.id, newId, tempAudio, mimeType);
+    } finally {
+      await FileSystem.deleteAsync(tempAudio, { idempotent: true });
+    }
 
     let coverPath: string | null = null;
     if (track.cover_path) {
       const coverExt = track.cover_path.split('.').pop() ?? 'jpg';
       const coverMime = coverExt === 'png' ? 'image/png' : 'image/jpeg';
-      const tempCover = FileSystem.cacheDirectory + `copy_cover_${Date.now()}.${coverExt}`;
-      const coverDownload = await FileSystem.downloadAsync(getPublicUrl(track.cover_path), tempCover);
-      if (coverDownload.status === 200) {
-        coverPath = await uploadCover(user.id, newId, tempCover, coverMime);
+      const tempCover = `${FileSystem.cacheDirectory}copy_cover_${Date.now()}.${coverExt}`;
+      try {
+        const coverDownload = await downloadWithTimeout(getPublicUrl(track.cover_path), tempCover, COVER_DOWNLOAD_TIMEOUT_MS);
+        if (coverDownload.status === 200)
+          coverPath = await uploadCover(user.id, newId, tempCover, coverMime);
+      } catch (err: any) {
+        console.warn('Не удалось загрузить обложку:', err.message);
+      } finally {
+        await FileSystem.deleteAsync(tempCover, { idempotent: true });
       }
-      await FileSystem.deleteAsync(tempCover, { idempotent: true });
     }
 
     const { error: insertError } = await supabase.from('tracks').insert({
